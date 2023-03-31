@@ -1,0 +1,32 @@
+DATA:
+  data_root: data/matterport_3d
+  data_root_2d_fused_feature: data/matterport_multiview_openseg_test
+  feature_2d_extractor: openseg
+  classes: 21
+  voxel_size: 0.02
+  input_color: False
+  use_shm: False
+  
+TEST:
+  split: test  # split in [train, val and test]
+  prompt_eng: True
+  mark_no_feature_to_unknown: True
+  feature_type: 'ensemble' # 'distill' | 'fusion' | 'ensemble'
+  save_feature_as_numpy: False
+  vis_pred: True
+  vis_gt: True
+  test_workers: 8
+  test_gpu: [0]
+  test_batch_size: 1
+  model_path:
+  save_folder:
+  test_repeats: 5
+  arch_3d: MinkUNet18A
+  manual_seed: 3407
+
+Distributed:
+  dist_url: tcp://127.0.0.1:6787
+  dist_backend: 'nccl'
+  multiprocessing_distributed: True
+  world_size: 1
+  rank: 0
