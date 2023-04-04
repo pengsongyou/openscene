@@ -66,6 +66,8 @@
 - [2023/03/31] Code is released.
 
 ## Interactive Demo
+### No GPU is needed! Follow **[this intruction](./demo)** to set up and play with the real-time demo yourself.
+
 <p align="center">
   <img src="./media/demo.gif" width="75%" />
 </p>
@@ -73,7 +75,6 @@
 
 Here we present a **real-time**, **interactive**, **open-vocabulary** scene understanding tool. A user can type in an arbitrary query phrase like **`snoopy`** (rare object), **`somewhere soft`** (property), **`made of metal`** (material), **`where can I cook?`** (activity), **`festive`** (abstract concept) etc, and the correponding regions are highlighted.
 
-Follow **[this intruction](./demo)** to set up and play with the real-time demo yourself.
 
 ## Installation
 Follow the [installation instruction](installation.md) to install all required packages so you can do the evaluation & distillation afterwards.
