@@ -1,6 +1,6 @@
 DATA:
   data_root: data/matterport_3d
-  data_root_2d_fused_feature: data/matterport_multiview_openseg
+  data_root_2d_fused_feature: data/matterport_multiview_openseg_test
   feature_2d_extractor: openseg
   classes: 21
   aug: True
@@ -36,6 +36,7 @@ TEST:
   mark_no_feature_to_unknown: True
   feature_type: 'ensemble' # 'distill' | 'fusion' | 'ensemble'
   save_feature_as_numpy: False
+  vis_input: True
   vis_pred: True
   vis_gt: True
   test_workers: 8

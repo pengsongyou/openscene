@@ -13,6 +13,7 @@ TEST:
   mark_no_feature_to_unknown: True
   feature_type: 'ensemble' # 'distill' | 'fusion' | 'ensemble'
   save_feature_as_numpy: False
+  vis_input: True
   vis_pred: True
   vis_gt: True
   test_workers: 8

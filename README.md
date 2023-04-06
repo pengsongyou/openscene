@@ -44,7 +44,7 @@
       <a href="#datasets">Datasets</a>
     </li>
     <li>
-      <a href="#usage">Usage</a>
+      <a href="#run">Run</a>
     </li>
     <li>
       <a href="#applications">Applications</a>
@@ -66,7 +66,7 @@
 - [2023/03/31] Code is released.
 
 ## Interactive Demo
-### No GPU is needed! Follow **[this intruction](./demo)** to set up and play with the real-time demo yourself.
+### No GPU is needed! Follow **[this instruction](./demo)** to set up and play with the real-time demo yourself.
 
 <p align="center">
   <img src="./media/demo.gif" width="75%" />
@@ -77,7 +77,7 @@ Here we present a **real-time**, **interactive**, **open-vocabulary** scene unde
 
 
 ## Installation
-Follow the [installation instruction](installation.md) to install all required packages so you can do the evaluation & distillation afterwards.
+Follow the [installation.md](installation.md) to install all required packages so you can do the evaluation & distillation afterwards.
 
 ## Datasets
 
@@ -141,12 +141,22 @@ bash scripts/download_fused_features.sh
 Alternatively, you can also generate multi-view features yourself following the [instruction](./scripts/feature_fusion/README.md).
 
 
-## Usage
+## Run
 When you have installed the environment and obtained the **processed 3D data** and **multi-view fused features**, you are ready to run our OpenScene disilled/ensemble model for 3D semantic segmentation, or distill your own model from scratch.
 
-### Evaluation for 3D Semantic Segmentation Benchmark
+### Evaluation for 3D Semantic Segmentation with a Pre-defined Labelsets
+<p align="center">
+  <img src="./media/benchmark_screenshot.jpg" width="80%" />
+</p>
 
-To evaluate our model for different benchmarks (ScanNet/Matterport3D/nuScenes), you can run:
+Here you can evaluate OpenScene features on different dataset (ScanNet/Matterport3D/nuScenes/Replica) that have pre-defined labelsets.
+We already include the following labelsets in [label_constants.py](dataset/label_constants.py):
+- ScanNet 20 classes (`wall`, `door`, `chair`, ...)
+- Matterport3D 21 classes (ScanNet 20 classes + `floor`)
+- Matterport top 40, 80, 160 NYU classes (more rare object classes)
+- nuScenes 16 classes (`road`, `bicycle`, `sidewalk`, ...)
+
+The general command to run evaluation:
 ```bash
 sh run/eval.sh EXP_DIR CONFIG.yaml feature_type
 ```
@@ -155,25 +165,30 @@ where you specify your experiment directory `EXP_DIR`, and replace `CONFIG.yaml`
 - `distill`: features from 3D distilled model 
 - `ensemble`: Our 2D-3D ensemble features
 
-To evaluate with `distill` and `ensemble`, the easiest way is to use a pre-trained 3D distilled model. You can do this by using one of the config files with postfix `_pretrained`.
+To evaluate with `distill` and `ensemble`, the easiest way is to use a pre-trained 3D distilled model. You can do this by using one of the config files with postfix `_pretrained`. 
 
-For example, to evaluate OpenScene (distilled from OpenSeg features) on ScanNet, you can simply run:
+For example, to evaluate the semantic segmentation on Replica, you can simply run:
 ```bash
-# Run 3D distilled model
-sh run/eval.sh out/scannet_openseg config/scannet/ours_openseg_pretrained.yaml distill
-
 # 2D-3D ensemble
-sh run/eval.sh out/scannet_openseg config/scannet/ours_openseg_pretrained.yaml ensemble
-```
-The script will automatically download the pretrained model and run the evaluation for ScanNet 20 classes.
-You can find all outputs in the `out/scannet_openseg`.
+sh run/eval.sh out/replica_openseg config/replica/ours_openseg_pretrained.yaml ensemble
 
-For evaluation options, see under `TEST` inside `config/scannet/ours_openseg_pretrained.yaml`. Below are important evaluation options that you might want to modify:
-- `vis_gt` (default: False):  visualize point clouds with GT semantic labels
-- `vis_pred` (default: False): visualize point clouds with our predicted semantic labels
+# Run 3D distilled model
+sh run/eval.sh out/replica_openseg config/replica/ours_openseg_pretrained.yaml distill
+
+# Evaluate with 2D fused features
+sh run/eval.sh out/replica_openseg config/replica/ours_openseg_pretrained.yaml fusion
+```
+The script will automatically download the pretrained 3D model and run the evaluation for Matterport 21 classes.
+You can find all outputs in the `out/replica_openseg`.
+
+For evaluation options, see under `TEST` inside `config/replica/ours_openseg_pretrained.yaml`. Below are important evaluation options that you might want to modify:
+- `labelset` (default: None, `scannet`| `matterport` | `matterport40`| `matterport80`|`matterport160`): Evaluate on a specific pre-defined labelset in [label_constants.py](./dataset/label_constants.py). If not specified, same as your 3D point cloud folder name
+- `eval_iou` (default: True): whether evaluating the mIoU. Set to `False` if there is no GT labels
 - `save_feature_as_numpy` (default: False): save the per-point features as `.npy`
 - `prompt_eng` (default: True): input class name X -> "a X in a scene"
-- `model_path` (default: None): path to the pre-trained 3D model
+- `vis_gt` (default: True):  visualize point clouds with GT semantic labels
+- `vis_pred` (default: True): visualize point clouds with our predicted semantic labels
+- `vis_input` (default: True): visualize input point clouds
 
 If you want to use a 3D model distilled from scratch, specify the `model_path` to the correponding checkpoints `EXP/model/model_best.pth.tar`.
 
@@ -187,13 +202,14 @@ Finally, if you want to distill a new 3D model from scratch, run:
 - Resume: 
 ```sh run/resume_distill.sh EXP_NAME CONFIG.yaml```
 
-For available distillation options, please take a look at `DISTILL` inside `config/scannet/ours_openseg.yaml`
+For available distillation options, please take a look at `DISTILL` inside `config/matterport/ours_openseg.yaml`
 
 
 ### Using Your Own Datasets
 1. Follow the [data preprocessing instruction](./scripts/preprocess/README.md), modify codes accordingly to obtain the processed 2D&3D data
 2. Follow the [feature fusion instruction](./scripts/feature_fusion/README.md), modify codes to obtain multi-view fused features.
 3. You can distill a model on your own, or take our provided 3D distilled model weights (e.g. our 3D model for ScanNet or Matterport3D), and modify the `model_path` accordingly.
+4. If you want to evaluate on a specific labelset, change the `labelset` in config.
 
 
 ## Applications
