@@ -41,7 +41,7 @@
       <a href="#installation">Installation</a>
     </li>
     <li>
-      <a href="#datasets">Datasets</a>
+      <a href="#data-preparation">Data Preparation</a>
     </li>
     <li>
       <a href="#run">Run</a>
@@ -79,7 +79,7 @@ Here we present a **real-time**, **interactive**, **open-vocabulary** scene unde
 ## Installation
 Follow the [installation.md](installation.md) to install all required packages so you can do the evaluation & distillation afterwards.
 
-## Datasets
+## Data Preparation
 
 We provide the **pre-processed 3D&2D data** and **multi-view fused features** for the following datasets:
 - ScanNet
