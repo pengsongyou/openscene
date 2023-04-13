@@ -29,19 +29,6 @@ class FusedFeatureLoader(Point3DLoader):
 
         # prepare for 3D features
         self.datapath_feat = datapath_prefix_feat
-        # if feat_type == 'lseg_random_average':
-        #     self.dataPathFeat = datapath_prefix + '_lseg_random_average'
-        #     # self.dataPathFeat = '/home/songyou/disk2/matterport_3d_lseg_random_average'
-        # elif feat_type == 'openseg_random_average':
-        #     self.dataPathFeat = datapath_prefix + '_openseg_random_average'
-        # elif feat_type == 'openseg_random_average_test':
-        #     self.dataPathFeat = datapath_prefix + '_openseg_random_average_test'
-        # elif feat_type == '05sec_openseg':
-        #     self.dataPathFeat = datapath_prefix + '_openseg'
-        # elif feat_type == '05sec_lseg':
-        #     self.dataPathFeat = datapath_prefix + '_lseg'
-        # else:
-        #     raise NotImplementedError
 
         # Precompute the occurances for each scene
         # for training sets, ScanNet and Matterport has 5 each, nuscene 1
@@ -113,21 +100,21 @@ class FusedFeatureLoader(Point3DLoader):
             processed_data = torch.load(join(self.datapath_feat, scene_name+'.pt'))
 
         flag_mask_merge = False
-        if len(processed_data.keys())>2: # for ScanNet
-            feat_3d, mask_visible, mask_chunk = processed_data['feat'], processed_data['mask'], processed_data['mask_full']
-            mask = torch.zeros(feat_3d.shape[0], dtype=torch.bool)
-            mask[mask_visible] = True # mask out points without feature assigned
-        elif len(processed_data.keys())==2: # for Matterport3d & nuScenes
+        if len(processed_data.keys())==2:
             flag_mask_merge = True
             feat_3d, mask_chunk = processed_data['feat'], processed_data['mask_full']
             if isinstance(mask_chunk, np.ndarray): # if the mask itself is a numpy array
                 mask_chunk = torch.from_numpy(mask_chunk)
             mask = copy.deepcopy(mask_chunk)
-            if self.split != 'train': # val or test for matterport3d & nuscenes
+            if self.split != 'train': # val or test set
                 feat_3d_new = torch.zeros((locs_in.shape[0], feat_3d.shape[1]), dtype=feat_3d.dtype)
                 feat_3d_new[mask] = feat_3d
                 feat_3d = feat_3d_new
                 mask_chunk = torch.ones_like(mask_chunk) # every point needs to be evaluted
+        elif len(processed_data.keys())>2: # legacy, for old processed features
+            feat_3d, mask_visible, mask_chunk = processed_data['feat'], processed_data['mask'], processed_data['mask_full']
+            mask = torch.zeros(feat_3d.shape[0], dtype=torch.bool)
+            mask[mask_visible] = True # mask out points without feature assigned
 
         if len(feat_3d.shape)>2:
             feat_3d = feat_3d[..., 0]
@@ -135,13 +122,11 @@ class FusedFeatureLoader(Point3DLoader):
         locs = self.prevoxel_transforms(locs_in) if self.aug else locs_in
 
         # calculate the corresponding point features after voxelization
-        if self.split == 'train' and not flag_mask_merge: # ScanNet training set
-            feat_3d = feat_3d[mask] # get features for visible points
+        if self.split == 'train' and flag_mask_merge:
             locs, feats, labels, inds_reconstruct, vox_ind = self.voxelizer.voxelize(
                 locs_in, feats_in, labels_in, return_ind=True)
-            mask_chunk[mask_chunk.clone()] = mask
             vox_ind = torch.from_numpy(vox_ind)
-            mask = mask_chunk[vox_ind] # voxelized visible mask for entire point clouds
+            mask = mask_chunk[vox_ind] # voxelized visible mask for entire point cloud
             mask_ind = mask_chunk.nonzero(as_tuple=False)[:, 0]
             index1 = - torch.ones(mask_chunk.shape[0], dtype=int)
             index1[mask_ind] = mask_ind
@@ -157,11 +142,13 @@ class FusedFeatureLoader(Point3DLoader):
 
             # get the corresponding features after voxelization
             feat_3d = feat_3d[indices]
-        elif self.split == 'train' and flag_mask_merge: # Matterport3D/nuScenes training set
+        elif self.split == 'train' and not flag_mask_merge: # legacy, for old processed features
+            feat_3d = feat_3d[mask] # get features for visible points
             locs, feats, labels, inds_reconstruct, vox_ind = self.voxelizer.voxelize(
                 locs_in, feats_in, labels_in, return_ind=True)
+            mask_chunk[mask_chunk.clone()] = mask
             vox_ind = torch.from_numpy(vox_ind)
-            mask = mask_chunk[vox_ind] # voxelized visible mask for entire point cloud
+            mask = mask_chunk[vox_ind] # voxelized visible mask for entire point clouds
             mask_ind = mask_chunk.nonzero(as_tuple=False)[:, 0]
             index1 = - torch.ones(mask_chunk.shape[0], dtype=int)
             index1[mask_ind] = mask_ind
