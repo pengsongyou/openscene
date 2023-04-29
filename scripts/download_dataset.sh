@@ -4,7 +4,7 @@ echo "0 - ScanNet 3D (point clouds with GT semantic labels)"
 echo "1 - ScanNet 2D (RGB-D images with camera poses)"
 echo "2 - Matterport 3D (point clouds with GT semantic labels)"
 echo "3 - Matterport 2D (RGB-D images with camera poses)"
-echo "4 - nuScenes 3D (lidar point clouds with GT semantic labels)"
+echo "4 - nuScenes 3D - Validation Set (lidar point clouds with GT semantic labels)"
 echo "5 - nuScenes 2D (RGB images with camera poses)"
 echo "6 - Replica 3D (point clouds)"
 echo "7 - Replica 2D (RGB-D images)"
@@ -56,7 +56,7 @@ then
     echo "Done!"
 elif [ $ds_id == 4 ]
 then
-    echo "You chose 4: nuScenes 3D"
+    echo "You chose 4: nuScenes 3D - Validation Set"
     mkdir -p data
     cd data
     echo "Start downloading ..."

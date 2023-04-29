@@ -37,12 +37,12 @@ TEST:
   feature_type: 'ensemble' # 'distill' | 'fusion' | 'ensemble'
   save_feature_as_numpy: False
   map_nuscenes_details: True
-  vis_input: True
-  vis_pred: True
-  vis_gt: True
+  vis_input: False
+  vis_pred: False
+  vis_gt: False
   test_workers: 8
   test_gpu: [0]
-  test_batch_size: 4
+  test_batch_size: 1
   test_repeats: 5
   model_path:
   save_folder:

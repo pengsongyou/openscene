@@ -6,7 +6,7 @@ echo "2 - Matterport - Multi-view fused OpenSeg features, train/val (198.3G)"
 echo "3 - Matterport - Multi-view fused OpenSeg features, test set (66.7G)"
 echo "4 - Replica - Multi-view fused OpenSeg features (9.0G)"
 echo "5 - Matterport - Multi-view fused LSeg features (coming)"
-echo "6 - nuScenes - Multi-view fused OpenSeg features (coming)"
+echo "6 - nuScenes - Multi-view fused OpenSeg features, validation set (327G) "
 echo "7 - nuScenes - Multi-view fused LSeg features (coming)"
 read -p "Enter dataset ID you want to download: " ds_id
 
@@ -75,13 +75,13 @@ then
     echo "Done!"
 elif [ $ds_id == 6 ]
 then
-    echo "You chose 6: nuScenes - Multi-view fused OpenSeg features"
+    echo "You chose 6: nuScenes - Multi-view fused OpenSeg features, validation set"
     mkdir -p data
     cd data
     echo "Start downloading ..."
-    wget https://cvg-data.inf.ethz.ch/openscene/data/nuscenes_multiview_openseg.zip
+    wget https://cvg-data.inf.ethz.ch/openscene/data/nuscenes_multiview_openseg_val.zip
     echo "Done! Start unzipping ..."
-    unzip nuscenes_multiview_openseg.zip
+    unzip nuscenes_multiview_openseg_val.zip
     echo "Done!"
 elif [ $ds_id == 7 ]
 then

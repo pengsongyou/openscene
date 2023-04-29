@@ -1,7 +1,7 @@
 DATA:
   data_root: data/nuscenes_3d
-  data_root_2d_fused_feature: data/nuscenes_multiview_lseg
-  feature_2d_extractor: lseg
+  data_root_2d_fused_feature: data/nuscenes_multiview_openseg_val
+  feature_2d_extractor: openseg
   classes: 16
   aug: False
   voxel_size: 0.05
@@ -44,7 +44,7 @@ TEST:
   test_gpu: [0]
   test_batch_size: 1
   test_repeats: 5
-  model_path:
+  model_path: 'https://cvg-data.inf.ethz.ch/openscene/models/nuscenes_openseg.pth.tar'
   save_folder:
 
 Distributed:

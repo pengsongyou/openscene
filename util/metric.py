@@ -17,8 +17,7 @@ def confusion_matrix(pred_ids, gt_ids, num_classes):
             pred_ids[idxs] * (num_classes+1) + gt_ids[idxs],
             minlength=(num_classes+1)**2).reshape((
             num_classes+1, num_classes+1)).astype(np.ulonglong)
-        # return confusion[:num_classes, :num_classes]
-        return confusion
+        return confusion[:num_classes, :num_classes]
 
     return np.bincount(
         pred_ids[idxs] * num_classes + gt_ids[idxs],
