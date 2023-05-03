@@ -228,8 +228,9 @@ We build some parts of our code on top of the [BPNet repository](https://github.
 - [ ] Support demo for arbitrary scenes
 - [ ] Support in-webiste demo
 - [ ] Support multi-view feature fusion with LSeg and OVSeg
-- [ ] Add missing multi-view fusion feature for Matterport & nuScenes
-- [ ] Multi-view feature fusion code for nuScenes
+- [ ] Add missing multi-view fusion LSeg feature for Matterport & nuScenes
+- [x] Add missing multi-view fusion OpenSeg feature for nuScenes
+- [x] Multi-view feature fusion code for nuScenes
 - [ ] Support the latest PyTorch version
 
 We are very much welcome all kinds of contributions to the project.

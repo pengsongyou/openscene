@@ -99,7 +99,7 @@ class PointCloudToImageMapper(object):
         self.cut_bound = cut_bound
         self.intrinsics = intrinsics
 
-    def compute_mapping(self, camera_to_world, coords, depth, intrinsic=None):
+    def compute_mapping(self, camera_to_world, coords, depth=None, intrinsic=None):
         """
         :param camera_to_world: 4 x 4
         :param coords: N x 3 format
@@ -122,12 +122,16 @@ class PointCloudToImageMapper(object):
         inside_mask = (pi[0] >= self.cut_bound) * (pi[1] >= self.cut_bound) \
                     * (pi[0] < self.image_dim[0]-self.cut_bound) \
                     * (pi[1] < self.image_dim[1]-self.cut_bound)
-        depth_cur = depth[pi[1][inside_mask], pi[0][inside_mask]]
-        occlusion_mask = np.abs(depth[pi[1][inside_mask], pi[0][inside_mask]]
-                                - p[2][inside_mask]) <= \
-                                self.vis_thres * depth_cur
+        if depth is not None:
+            depth_cur = depth[pi[1][inside_mask], pi[0][inside_mask]]
+            occlusion_mask = np.abs(depth[pi[1][inside_mask], pi[0][inside_mask]]
+                                    - p[2][inside_mask]) <= \
+                                    self.vis_thres * depth_cur
 
-        inside_mask[inside_mask == True] = occlusion_mask
+            inside_mask[inside_mask == True] = occlusion_mask
+        else:
+            front_mask = p[2]>0 # make sure the depth is in front
+            inside_mask = front_mask*inside_mask
         mapping[0][inside_mask] = pi[1][inside_mask]
         mapping[1][inside_mask] = pi[0][inside_mask]
         mapping[2][inside_mask] = 1
