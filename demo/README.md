@@ -68,6 +68,7 @@ Coming soon.
 
 ## Troubleshooting
 - If you get the error `OSError: Address already in use`, you might need to change another port in `clip_server.py`.
+- Alternatively, a more elegent way is to find/kill the process id via netstat, as suggested in [this issue](https://github.com/pengsongyou/openscene/issues/28) (thanks [dbuck](https://github.com/dbuck)!).
 - For Mac users, you might need to change inside `run_demo` accordingly from `x86_64` to `arm64`.
 
 For additional help, please refer to the code documentation or contact the author.
