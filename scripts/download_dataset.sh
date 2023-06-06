@@ -70,7 +70,7 @@ then
     mkdir -p data
     cd data
     echo "Start downloading ..."
-    wget https://cvg-data.inf.ethz.ch/openscene/data/matterport_processed/nuscenes_2d.zip
+    wget https://cvg-data.inf.ethz.ch/openscene/data/nuscenes_processed/nuscenes_2d.zip
     echo "Done! Start unzipping ..."
     unzip nuscenes_2d.zip
     echo "Done!"
