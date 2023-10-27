@@ -63,6 +63,7 @@
 
 ## News :triangular_flag_on_post:
 
+- [2023/10/27] Add the code for LSeg per-pixel feature extraction and multi-view fusion. Check [this repo](https://github.com/pengsongyou/lseg_feature_extraction).
 - [2023/03/31] Code is released.
 
 ## Interactive Demo
@@ -227,8 +228,8 @@ We build some parts of our code on top of the [BPNet repository](https://github.
 ## TODO
 - [ ] Support demo for arbitrary scenes
 - [ ] Support in-webiste demo
-- [ ] Support multi-view feature fusion with LSeg and OVSeg
-- [ ] Add missing multi-view fusion LSeg feature for Matterport & nuScenes
+- [x] Support multi-view feature fusion with LSeg
+- [x] Add missing multi-view fusion LSeg feature for Matterport & nuScenes
 - [x] Add missing multi-view fusion OpenSeg feature for nuScenes
 - [x] Multi-view feature fusion code for nuScenes
 - [ ] Support the latest PyTorch version

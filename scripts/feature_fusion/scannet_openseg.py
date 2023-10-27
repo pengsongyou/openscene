@@ -8,7 +8,7 @@ from tqdm import tqdm, trange
 import tensorflow as tf2
 import tensorflow.compat.v1 as tf
 from os.path import join, exists
-from fusion_util import extract_openseg_img_feature, PointCloudToImageMapper, save_fused_feature
+from fusion_util import extract_openseg_img_feature, PointCloudToImageMapper, save_fused_feature, adjust_intrinsic, make_intrinsic
 
 
 def get_args():
@@ -119,6 +119,10 @@ def main(args):
     #!### Dataset specific parameters #####
     img_dim = (320, 240)
     depth_scale = 1000.0
+    fx = 577.870605
+    fy = 577.870605
+    mx=319.5
+    my=239.5
     #######################################
     visibility_threshold = 0.25 # threshold for the visibility check
 
@@ -155,12 +159,14 @@ def main(args):
     else:
         args.openseg_model = None
 
-    # load intrinsic parameter
-    intrinsics=np.loadtxt(os.path.join(args.data_root_2d, 'intrinsics.txt'))
+    # calculate image pixel-3D points correspondances
+    intrinsic = make_intrinsic(fx=fx, fy=fy, mx=mx, my=my)
+    intrinsic = adjust_intrinsic(intrinsic, intrinsic_image_dim=[640, 480], image_dim=img_dim)
+
 
     # calculate image pixel-3D points correspondances
     args.point2img_mapper = PointCloudToImageMapper(
-            image_dim=img_dim, intrinsics=intrinsics,
+            image_dim=img_dim, intrinsics=intrinsic,
             visibility_threshold=visibility_threshold,
             cut_bound=args.cut_num_pixel_boundary)
 
